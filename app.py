@@ -63,6 +63,8 @@ def setWebhook():
                     text = ans['message']['text']
                     if "/play" in text:
                         with open('data.txt') as json_file:
+                            if chat_id not in data:
+                                return "ok"
                             data = json.load(json_file)
                             players = []
                             temp_data = {}
