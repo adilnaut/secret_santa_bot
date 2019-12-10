@@ -80,12 +80,17 @@ def setWebhook():
                                 players.append(username)
                                 i += 1
                             again = True
-                            players_copy = players.copy()
+                            players_copy = list(players)
                             while again:
                                 print('again')
                                 random.shuffle(players)
-                                break;
-                                if len(set(players_copy).intersection(players)) > 0:
+                                # break;
+                                x = 0
+                                for j in range(len(players)):
+                                    if players[i] == players_copy[i]:
+                                        x += 1
+
+                                if x > 0:
                                     continue
                                 else:
                                     if "pair" in data[chat_id]:
@@ -103,7 +108,6 @@ def setWebhook():
                                                 break;
                                     else:
                                         again = False
-                                    again = False
                             for i in range(len(players)):
                                 bot_send_message(temp_data[players_copy[i]]["user_id"], "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
                                 if players_copy[i] == "malika_nu":
