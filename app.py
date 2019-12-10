@@ -109,9 +109,9 @@ def setWebhook():
                                     else:
                                         again = False
                             for i in range(len(players)):
-                                bot_send_message(temp_data[players_copy[i]]["user_id"], "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
+                                bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
                                 if players_copy[i] == "malika_nu":
-                                    bot_send_message(temp_data[players_copy[i]]["user_id"], "Meow meow meow")
+                                    bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "Meow meow meow")
                             bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
                             return "ok"
                         return "ok"
