@@ -47,6 +47,7 @@ def setWebhook():
                     model_user["id"] = user['user']['id']
                     model_user["username"] = user['user']['username']
                     arr.append(model_user)
+                model_users[chat_id] = {}
                 model_users[chat_id]["user_data"] = arr
                 bot_send_message(chat_id, "This is the secret santa bot! \n You can play Secret Santa now with /play command or set restriction with /pair @username1 @username2. \n Everyone should have admin right to be recognized by the bot")
                 with open('data.txt', 'w') as outfile:
