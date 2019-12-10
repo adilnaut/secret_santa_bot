@@ -19,7 +19,7 @@ botName = "easy_santa_astana_bot" #Without @
 def setWebhook():
     if request.method == "GET":
         logging.info("Hello, Telegram!")
-        print "Done"
+        print ("Done")
         return "OK, Telegram Bot!"
 
 
@@ -37,7 +37,7 @@ def verification():
 
 def handle_message(msg):
     text = msg.text
-    print msg
+    print(msg)
     # An echo bot
     bot.sendMessage(chat_id=msg.chat.id, text=text)
 
