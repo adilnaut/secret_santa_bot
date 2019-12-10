@@ -4,6 +4,8 @@ import logging
 import telegram
 import os
 import requests
+import json
+import random
 
 HOST = "https://secret-santa-astana.herokuapp.com/"
 
@@ -33,11 +35,91 @@ def setWebhook():
             part = ans['message']['new_chat_participant']
             if part['is_bot'] == True and part['username'] == "easy_santa_astana_bot":
                 # bot added to the group
-                bot_request("getChatAdministrators?chat_id="+str(ans['message']['chat']['id']))
-                pass
+                chat_id = str(ans['message']['chat']['id'])
+                r_json = bot_request("getChatAdministrators?chat_id="+chat_id)
+                users = r_json['result']
+                model_users = {}
+
+                arr = []
+                for user in users:
+                    model_user = {}
+                    model_user["name"] = user['user']['first_name']
+                    model_user["id"] = user['user']['id']
+                    model_user["username"] = user['user']['username']
+                    arr.append(model_user)
+                model_users[chat_id]["user_data"] = arr
+                bot_send_message(chat_id, "This is the secret santa bot! \n You can play Secret Santa now with /play command or set restriction with /pair @username1 @username2. \n Everyone should have admin right to be recognized by the bot")
+                with open('data.txt', 'w') as outfile:
+                    json.dump(model_users, outfile)
+                return "ok"
             else:
                 return "ok"
         else:
+            if "chat" in ans['message']:
+                is_bot = ans['message']['from']['is_bot']
+                if is_bot == False:
+                    chat_id = str(ans['message']['chat']['id'])
+                    text = ans['message']['text']
+                    if "/play" in text:
+                        with open('data.txt') as json_file:
+                            data = json.load(json_file)
+                            players = []
+                            temp_data = {}
+                            i = 0
+                            for user in data[chat_id]["user_data"]:
+                                name = user["name"]
+                                user_id = user["id"]
+                                username = user["username"]
+                                temp_data[username] = {}
+                                temp_data[username]["name"] = name
+                                temp_data[username]["user_id"] = user_id
+                                temp_data[username]["index"] = i
+                                players.append(username)
+                                i += 1
+                            again = True
+                            players_copy = players.copy()
+                            while again:
+                                random.shuffle(players)
+                                if len(set(players_copy).intersection(players)) > 0:
+                                    continue
+                                else:
+                                    if "pair" in data[chat_id]:
+                                        for pair in data[chat_id]["pair"]:
+                                            i_user1  = temp_data[pair["user1"]]["index"]
+                                            i_user2  = temp_data[pair["user2"]]["index"]
+                                            # giver
+                                            giver = players_copy[i_user1]
+                                            # receiver
+                                            receiver = players[i_user1]
+                                            if receiver !=  pair["user2"]:
+                                                continue
+                                            else:
+                                                again = True
+                                                break;
+                                    else:
+                                        again = False
+                            for i in range(len(players)):
+                                bot_send_message(temp_data[players_copy[i]]["user_id"], "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
+                                if players_copy[i] == "malika_nu":
+                                    bot_send_message(temp_data[players_copy[i]]["user_id"], "Meow meow meow")
+                            bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
+                            return "ok"
+                        return "ok"
+                    if "/pair" in text:
+                        with open('data.txt') as json_file:
+                            data = json.load(json_file)
+                            if chat_id in data:
+                                data[chat_id]["pair"] = []
+                                tokens = text.split(" ")
+                                if len(tokens) != 3:
+                                    bot_send_message(chat_id, "Incorrect format, try again ! \n You can play Secret Santa now with /play command or set restriction with /pair @username1 @username2.")
+                                    return "ok"
+                                user1  = tokens[1].replace("@", "")
+                                user2 = tokens[2].replace("@", "")
+                                data[chat_id]["pair"].append({"user1":user1, "user2":user2})
+                                with open('data.txt', 'w') as outfile:
+                                    json.dump(data, outfile)
+                        return "ok boomer"
             return "ok"
         sender_id = str(ans['message']['from']['id'])
         sender_name = str(ans['message']['from']['first_name'])
@@ -61,6 +143,7 @@ def bot_send_message(sender_id, text):
 def bot_request(req):
     r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/"+req,  headers={'Content-Type':'application/json'})
     print(r.json())
+    return r.json()
 # def handle_message(msg):
 #     text = msg.text
 #     print(msg)
