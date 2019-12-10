@@ -21,7 +21,7 @@ def setWebhook():
         logging.info("Hello, Telegram!")
         print ("Done")
 
-        r = requests.get("https://api.telegram.org/bot{919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I}/setWebhook?url={https://secret-santa-astana.herokuapp.com/}")
+        r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/setWebhook?url=https://secret-santa-astana.herokuapp.com/")
 
         print(r.json())# https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
         return "OK, Telegram Bot!"
