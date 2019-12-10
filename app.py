@@ -80,6 +80,7 @@ def setWebhook():
                             again = True
                             players_copy = players.copy()
                             while again:
+                                print('again')
                                 random.shuffle(players)
                                 if len(set(players_copy).intersection(players)) > 0:
                                     continue
