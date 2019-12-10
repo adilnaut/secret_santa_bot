@@ -20,12 +20,11 @@ def setWebhook():
     if request.method == "GET":
         logging.info("Hello, Telegram!")
         print ("Done")
+
+        r = requests.get("https://api.telegram.org/bot{919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I}/setWebhook?url={https://secret-santa-astana.herokuapp.com/}")
+
+        print(r.json())# https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
         return "OK, Telegram Bot!"
-    s = bot.setWebhook("{}/verify".format(HOST))
-    if s:
-        logging.info("{} WebHook Setup OK!".format(botName))
-    else:
-        logging.info("{} WebHook Setup Failed!".format(botName))
 
 
 @app.route("/verify", methods=["POST"])
@@ -47,9 +46,9 @@ def handle_message(msg):
 
 
 if __name__ == "__main__":
-    s = bot.setWebhook("{}/verify".format(HOST))
-    if s:
-        logging.info("{} WebHook Setup OK!".format(botName))
-    else:
-        logging.info("{} WebHook Setup Failed!".format(botName))
+    # s = bot.setWebhook("{}/verify".format(HOST))
+    # if s:
+    #     logging.info("{} WebHook Setup OK!".format(botName))
+    # else:
+    #     logging.info("{} WebHook Setup Failed!".format(botName))
     app.run(host= "0.0.0.0", debug=True)
