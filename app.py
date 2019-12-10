@@ -25,7 +25,9 @@ def setWebhook():
 
         print(r.json())# https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
         return "OK, Telegram Bot!"
-
+    if request.method == "POST":
+        print(request.get_json())
+        return "ok"
 
 @app.route("/verify", methods=["POST"])
 def verification():
@@ -39,11 +41,11 @@ def verification():
         return "ok"
 
 
-def handle_message(msg):
-    text = msg.text
-    print(msg)
-    # An echo bot
-    bot.sendMessage(chat_id=msg.chat.id, text=text)
+# def handle_message(msg):
+#     text = msg.text
+#     print(msg)
+#     # An echo bot
+#     bot.sendMessage(chat_id=msg.chat.id, text=text)
 
 
 if __name__ == "__main__":
