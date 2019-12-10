@@ -28,7 +28,7 @@ def setWebhook():
     if request.method == "POST":
         print(request.get_json())
         ans = request.get_json()
-        bot_request("sendMessage?chat_id="+ans['message']['from']['id']+",text="+ans['message']['from']['first_name'])
+        bot_request("sendMessage?chat_id="+str(ans['message']['from']['id'])+",text="+str(ans['message']['from']['first_name']))
         return "ok"
 
 @app.route("/verify", methods=["POST"])
