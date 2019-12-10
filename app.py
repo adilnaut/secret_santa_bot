@@ -99,6 +99,7 @@ def setWebhook():
                                                 break;
                                     else:
                                         again = False
+                                    again = False
                             for i in range(len(players)):
                                 bot_send_message(temp_data[players_copy[i]]["user_id"], "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
                                 if players_copy[i] == "malika_nu":
