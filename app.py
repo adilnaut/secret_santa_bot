@@ -28,6 +28,17 @@ def setWebhook():
     if request.method == "POST":
         print(request.get_json())
         ans = request.get_json()
+
+        if 'new_chat_participant' in ans['message']:
+            part = ans['message']['new_chat_participant']
+            if part['is_bot'] == True and part['username'] == "easy_santa_astana_bot":
+                # bot added to the group
+                bot_request("getChatAdministrators?chat_id="+str(ans['message']['chat']['id']))
+                pass
+            else:
+                return "ok"
+        else:
+            return "ok"
         sender_id = str(ans['message']['from']['id'])
         sender_name = str(ans['message']['from']['first_name'])
         bot_send_message(sender_id, sender_name)
