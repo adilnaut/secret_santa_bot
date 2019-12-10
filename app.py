@@ -28,8 +28,10 @@ def setWebhook():
     if request.method == "POST":
         print(request.get_json())
         ans = request.get_json()
-        print("sendMessage?chat_id="+str(ans['message']['from']['id'])+",text="+str(ans['message']['from']['first_name']))
-        bot_request("sendMessage?chat_id="+str(ans['message']['from']['id'])+",text="+str(ans['message']['from']['first_name']))
+        sender_id = str(ans['message']['from']['id'])
+        sender_name = str(ans['message']['from']['first_name'])
+        bot_send_message(sender_id, sender_name)
+        # print("sendMessage?chat_id="+str(ans['message']['from']['id'])+",text="+str(ans['message']['from']['first_name']))
         return "ok"
 
 @app.route("/verify", methods=["POST"])
@@ -42,6 +44,8 @@ def verification():
         # logging.info("Calling {}".format(update.message))
         # handle_message(update.message)
         return "ok"
+def bot_send_message(sender_id, text):
+    bot_request("sendMessage?chat_id="+sender_id+"&text="+text)
 
 def bot_request(req):
     r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/"+req,  headers={'Content-Type':'application/json'})
