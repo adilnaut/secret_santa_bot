@@ -87,7 +87,7 @@ def setWebhook():
                                 # break;
                                 x = 0
                                 for j in range(len(players)):
-                                    if players[i] == players_copy[i]:
+                                    if players[j] == players_copy[j]:
                                         x += 1
 
                                 if x > 0:
