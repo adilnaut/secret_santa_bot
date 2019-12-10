@@ -21,7 +21,11 @@ def setWebhook():
         logging.info("Hello, Telegram!")
         print ("Done")
         return "OK, Telegram Bot!"
-
+    s = bot.setWebhook("{}/verify".format(HOST))
+    if s:
+        logging.info("{} WebHook Setup OK!".format(botName))
+    else:
+        logging.info("{} WebHook Setup Failed!".format(botName))
 
 
 @app.route("/verify", methods=["POST"])
