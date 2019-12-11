@@ -123,7 +123,7 @@ def setWebhook():
                                             if players[i_user2] == pair["user1"]:
                                                 again = True
                                                 break;
-                                        break;
+                                        continue;
                                     else:
                                         break;
                             for i in range(len(players)):
