@@ -60,6 +60,8 @@ def setWebhook():
                 is_bot = ans['message']['from']['is_bot']
                 if is_bot == False:
                     chat_id = str(ans['message']['chat']['id'])
+                    if "text" not in ans['message']:
+                        return "ok boomer"
                     text = ans['message']['text']
                     if "/start" in text:
                         is_private = ans['message']['chat']['type'] == 'private'
