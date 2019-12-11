@@ -18,7 +18,7 @@ botName = "easy_santa_astana_bot" #Without @
 
 def edit_json(value):
     r = requests.put("https://api.myjson.com/bins/1aneis", data={"data":value}, headers={"contentType":"application/json", "dataType":"json"})
-    print(r.read())
+    print(r.json())
 def get_json():
     r = requests.get("https://api.myjson.com/bins/1aneis")
     print(r.json())
