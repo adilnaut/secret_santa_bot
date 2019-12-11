@@ -112,6 +112,10 @@ def setWebhook():
                                             giver = players_copy[i_user1]
                                             # receiver
                                             receiver = players[i_user1]
+                                            print("giver")
+                                            print(players_copy)
+                                            print("receiver")
+                                            print(players)
                                             if receiver !=  pair["user2"]:
                                                 again = False
                                                 continue
