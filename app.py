@@ -123,7 +123,7 @@ def setWebhook():
                                 usr_id = str(temp_data[players_copy[i]]["user_id"])
                                 bot_send_message(usr_id, "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
                                 data[usr_id] = {}
-                                if santa_of not in data[user_id]:
+                                if "santa_of" not in data[user_id]:
                                     data[user_id]["santa_of"] = []
                                 temp_dict = {}
                                 temp_dict["username"] = players_copy[i]
