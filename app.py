@@ -103,7 +103,7 @@ def setWebhook():
                                 print(players_copy)
                                 print(data)
                                 print(temp_data)
-                                break;
+                                # break;
                                 x = 0
                                 for j in range(len(players)):
                                     if players[j] == players_copy[j]:
