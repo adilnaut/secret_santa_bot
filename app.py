@@ -94,6 +94,7 @@ def setWebhook():
                                 i += 1
                             again = True
                             players_copy = list(players)
+                            c = 0
                             while again:
                                 print('again')
                                 random.shuffle(players)
@@ -103,7 +104,11 @@ def setWebhook():
                                 print(players_copy)
                                 print(data)
                                 print(temp_data)
+                                if c > 100:
+                                    bot_send_message(chat_id, "Restrictions are imposible to meet, try to delete bot and invite again!")
+                                    break;
                                 # break;
+                                c += 1
                                 x = 0
                                 for j in range(len(players)):
                                     if players[j] == players_copy[j]:
