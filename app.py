@@ -105,26 +105,16 @@ def setWebhook():
                                     continue
                                 else:
                                     if "pair" in data[chat_id]:
+                                        again = False
                                         for pair in data[chat_id]["pair"]:
                                             i_user1  = temp_data[pair["user1"]]["index"]
                                             i_user2  = temp_data[pair["user2"]]["index"]
-                                            # giver
-                                            giver = players_copy[i_user1]
-                                            # receiver
-                                            receiver = players[i_user1]
-                                            print("giver")
-                                            print(players_copy)
-                                            print("receiver")
-                                            print(players)
-                                            break;
-                                            if receiver !=  pair["user2"]:
-                                                again = False
-                                                continue
-                                            else:
+                                            if players[i_user2] == pair["user2"]:
                                                 again = True
                                                 break;
+                                        continue
                                     else:
-                                        again = False
+                                        break;
                             for i in range(len(players)):
                                 usr_id = str(temp_data[players_copy[i]]["user_id"])
                                 bot_send_message(usr_id, "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
