@@ -27,7 +27,7 @@ def edit_json(value):
     # r = requests.post("https://api.myjson.com/bins/1aneis", data={"data":value})
     # print(r.json())
 def get_json():
-    url = "https://api.jsonbin.io/b/5df0a111bc5ffd0400977abc"
+    url = "https://api.jsonbin.io/b/5df0a111bc5ffd0400977abc/latest"
     headers = {'secret-key': '$2b$10$R248o3.U5BEnIlPpNDFs.uERh/ui3h4oD/xLYz6Cbi2DTr.RrM52y', 'Content-Type': 'application/json'}
 
     req = requests.get(url, json={"another":"nothing"}, headers=headers)
