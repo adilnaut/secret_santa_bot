@@ -109,6 +109,12 @@ def setWebhook():
                                         for pair in data[chat_id]["pair"]:
                                             i_user1  = temp_data[pair["user1"]]["index"]
                                             i_user2  = temp_data[pair["user2"]]["index"]
+                                            print("POOP")
+                                            print(players)
+                                            print(players_copy)
+                                            print(i_user1)
+                                            print(o_user2)
+                                            print(temp_data)
                                             if players[i_user1] == pair["user2"]:
                                                 again = True
                                                 break;
