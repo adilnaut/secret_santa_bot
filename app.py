@@ -30,7 +30,7 @@ def setWebhook():
         print ("Done")
 
         r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/setWebhook?url=https://secret-santa-astana.herokuapp.com/")
-
+        edit_json("{}")
         print(r.json())# https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
         return "OK, Telegram Bot!"
     if request.method == "POST":
@@ -56,7 +56,7 @@ def setWebhook():
                     if "username" in user['user']:
                         model_user["username"] = user['user']['username']
                     else:
-                        model_user["username"] = user['user']['id']
+                        model_user["username"] = user['user']['first_name']
                     arr.append(model_user)
                 model_users[chat_id] = {}
                 model_users[chat_id]["user_data"] = arr
