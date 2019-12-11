@@ -95,7 +95,7 @@ def setWebhook():
                             while again:
                                 print('again')
                                 random.shuffle(players)
-                                break;
+                                # break;
                                 x = 0
                                 for j in range(len(players)):
                                     if players[j] == players_copy[j]:
@@ -117,6 +117,7 @@ def setWebhook():
                                             else:
                                                 again = True
                                                 break;
+                                        again = False
                                     else:
                                         again = False
                             for i in range(len(players)):
@@ -151,6 +152,7 @@ def setWebhook():
                                 user1  = tokens[1].replace("@", "")
                                 user2 = tokens[2].replace("@", "")
                                 data[chat_id]["pair"].append({"user1":user1, "user2":user2})
+                                bot_send_message(chat_id, "Pair of {} and {} is recorded!")
                                 with open('data.txt', 'w') as outfile:
                                     json.dump(data, outfile)
                         return "ok boomer"
