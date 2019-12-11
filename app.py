@@ -34,7 +34,7 @@ def get_json():
     print(req.text)
     # r = requests.get("https://api.myjson.com/bins/1aneis")
     # print(r.json())
-    return json.loads(req.text)['data']['data']
+    return json.loads(req.text)['data']
 @app.route("/", methods=["POST", "GET"])
 def setWebhook():
     if request.method == "GET":
