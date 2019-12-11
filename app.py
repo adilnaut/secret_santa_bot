@@ -61,6 +61,17 @@ def setWebhook():
                 if is_bot == False:
                     chat_id = str(ans['message']['chat']['id'])
                     text = ans['message']['text']
+                    if "/start" in text:
+                        is_private = ans['message']['chat']['type'] == 'private'
+                        if is_private:
+                            with open('data.txt') as json_file:
+                                data = json.load(json_file)
+                                if chat_id in data and "santa_of" in data[chat_id]:
+                                    for santa_of in data[chat_id]["santa_of"]:
+                                        bot_send_message(chat_id, "You are the secret santa of {} ({}) in the group {}! Keep it secret!".format(santa_of["santa_of_name"], santa_of["santa_of_username"], santa_of["chat_title"]))
+                                    return "ok"
+                                return "ok"
+                        return "ok"
                     if "/play" in text:
                         with open('data.txt') as json_file:
                             data = json.load(json_file)
@@ -109,7 +120,19 @@ def setWebhook():
                                     else:
                                         again = False
                             for i in range(len(players)):
-                                bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
+                                usr_id = str(temp_data[players_copy[i]]["user_id"]
+                                bot_send_message(usr_id), "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
+                                data[usr_id] = {}
+                                if santa_of not in data[user_id]:
+                                    data[user_id]["santa_of"] = []
+                                temp_dict = {}
+                                temp_dict["username"] = players_copy[i]
+                                temp_dict["santa_of_name"] =  temp_data[players[i]]["name"]
+                                temp_dict["santa_of_username"] = players[i]
+                                temp_dict["chat_title"] = ans['message']['chat']['title']
+                                data[user_id]["santa_of"].append(temp_dict)
+                                with open('data.txt', 'w') as outfile:
+                                    json.dump(data, outfile)
                                 if players_copy[i] == "malika_nu":
                                     bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "Meow meow meow")
                             bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
@@ -130,6 +153,17 @@ def setWebhook():
                                 with open('data.txt', 'w') as outfile:
                                     json.dump(data, outfile)
                         return "ok boomer"
+                    if len(text) > 0:
+                        is_private = ans['message']['chat']['type'] == 'private'
+                        if is_private:
+                            with open('data.txt') as json_file:
+                                data = json.load(json_file)
+                                if chat_id in data and "santa_of" in data[chat_id]:
+                                    for santa_of in data[chat_id]["santa_of"]:
+                                        bot_send_message(chat_id, "You are the secret santa of {} ({}) in the group {}! Keep it secret!".format(santa_of["santa_of_name"], santa_of["santa_of_username"], santa_of["chat_title"]))
+                                    return "ok"
+                                return "ok"
+                        return "ok"
             return "ok"
         sender_id = str(ans['message']['from']['id'])
         sender_name = str(ans['message']['from']['first_name'])
