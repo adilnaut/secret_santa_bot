@@ -124,13 +124,13 @@ def setWebhook():
                                 bot_send_message(usr_id, "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
                                 data[usr_id] = {}
                                 if "santa_of" not in data[user_id]:
-                                    data[user_id]["santa_of"] = []
+                                    data[usr_id]["santa_of"] = []
                                 temp_dict = {}
                                 temp_dict["username"] = players_copy[i]
                                 temp_dict["santa_of_name"] =  temp_data[players[i]]["name"]
                                 temp_dict["santa_of_username"] = players[i]
                                 temp_dict["chat_title"] = ans['message']['chat']['title']
-                                data[user_id]["santa_of"].append(temp_dict)
+                                data[usr_id]["santa_of"].append(temp_dict)
                                 with open('data.txt', 'w') as outfile:
                                     json.dump(data, outfile)
                                 if players_copy[i] == "malika_nu":
