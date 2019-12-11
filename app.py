@@ -142,7 +142,8 @@ def setWebhook():
                         with open('data.txt') as json_file:
                             data = json.load(json_file)
                             if chat_id in data:
-                                data[chat_id]["pair"] = []
+                                if "pair" not in data[chat_id]:
+                                    data[chat_id]["pair"] = []
                                 tokens = text.split(" ")
                                 if len(tokens) != 3:
                                     bot_send_message(chat_id, "Incorrect format, try again ! \n You can play Secret Santa now with /play command or set restriction with /pair @username1 @username2.")
