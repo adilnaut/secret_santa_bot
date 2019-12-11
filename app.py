@@ -17,10 +17,10 @@ bot = telegram.Bot(token='919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I')
 botName = "easy_santa_astana_bot" #Without @
 
 def edit_json(value):
-    requests.put("https://api.myjson.com/bins/jdjas", data={"data":value})
+    requests.put("https://api.myjson.com/bins/1aneis", data={"data":value})
 
 def get_json():
-    r = requests.get("https://api.myjson.com/bins/jdjas")
+    r = requests.get("https://api.myjson.com/bins/1aneis")
     print(r.json())
     return r.json()['data']
 @app.route("/", methods=["POST", "GET"])
@@ -29,10 +29,10 @@ def setWebhook():
         logging.info("Hello, Telegram!")
         print ("Done")
 
-        # r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/setWebhook?url=https://secret-santa-astana.herokuapp.com/")
-        r = requests.post("https://api.myjson.com/bins/jdjas", data={"data":"something"})
-        # print(r.text)# https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
-        return r.text
+        r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/setWebhook?url=https://secret-santa-astana.herokuapp.com/")
+
+        print(r.json())# https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
+        return "OK, Telegram Bot!"
     if request.method == "POST":
         print(request.get_json())
         ans = request.get_json()
