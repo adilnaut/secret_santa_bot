@@ -37,6 +37,8 @@ def setWebhook():
                 # bot added to the group
                 chat_id = str(ans['message']['chat']['id'])
                 r_json = bot_request("getChatAdministrators?chat_id="+chat_id)
+                if "result" not in r_json:
+                    return "ok boomer"
                 users = r_json['result']
                 model_users = {}
 
@@ -45,7 +47,10 @@ def setWebhook():
                     model_user = {}
                     model_user["name"] = user['user']['first_name']
                     model_user["id"] = user['user']['id']
-                    model_user["username"] = user['user']['username']
+                    if "username" in user['user']:
+                        model_user["username"] = user['user']['username']
+                    else:
+                        model_user["username"] = user['user']['id']
                     arr.append(model_user)
                 model_users[chat_id] = {}
                 model_users[chat_id]["user_data"] = arr
@@ -73,6 +78,8 @@ def setWebhook():
                                         bot_send_message(chat_id, "You are the secret santa of {} ({}) in the group {}! Keep it secret!".format(santa_of["santa_of_name"], santa_of["santa_of_username"], santa_of["chat_title"]))
                                     return "ok"
                                 return "ok"
+                        else:
+                            bot_send_message(chat_id, "Bot already started!")
                         return "ok"
                     if "/play" in text:
                         with open('data.txt') as json_file:
