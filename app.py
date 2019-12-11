@@ -16,7 +16,12 @@ global bot
 bot = telegram.Bot(token='919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I')
 botName = "easy_santa_astana_bot" #Without @
 
+def edit_json(value):
+    requests.put("https://api.myjson.com/bins/jdjas", data={"data":value})
 
+def get_json():
+    r = request.get("https://api.myjson.com/bins/jdjas")
+    return r.json()
 @app.route("/", methods=["POST", "GET"])
 def setWebhook():
     if request.method == "GET":
@@ -56,7 +61,8 @@ def setWebhook():
                 model_users[chat_id]["user_data"] = arr
                 bot_send_message(chat_id, "This is the secret santa bot! \n You can play Secret Santa now with /play command or set restriction with /pair @username1 @username2. \n Everyone should have admin right to be recognized by the bot")
                 with open('data.txt', 'w') as outfile:
-                    json.dump(model_users, outfile)
+                    s = json.dumps(model_users)
+                    edit_json(s)
                 return "ok"
             else:
                 return "ok"
@@ -72,7 +78,8 @@ def setWebhook():
                         is_private = ans['message']['chat']['type'] == 'private'
                         if is_private:
                             with open('data.txt') as json_file:
-                                data = json.load(json_file)
+                                # data = json.load(json_file)
+                                data = get_json()
                                 if chat_id in data and "santa_of" in data[chat_id]:
                                     for santa_of in data[chat_id]["santa_of"]:
                                         bot_send_message(chat_id, "You are the secret santa of {} ({}) in the group {}! Keep it secret!".format(santa_of["santa_of_name"], santa_of["santa_of_username"], santa_of["chat_title"]))
@@ -83,7 +90,8 @@ def setWebhook():
                         return "ok"
                     if "/play" in text:
                         with open('data.txt') as json_file:
-                            data = json.load(json_file)
+                            # data = json.load(json_file)
+                            data = get_json()
                             if chat_id not in data:
                                 return "ok"
                             players = []
@@ -151,7 +159,8 @@ def setWebhook():
                                 temp_dict["chat_title"] = ans['message']['chat']['title']
                                 data[usr_id]["santa_of"].append(temp_dict)
                                 with open('data.txt', 'w') as outfile:
-                                    json.dump(data, outfile)
+                                    s = json.dumps(data)
+                                    edit_json(s)
                                 if players_copy[i] == "malika_nu":
                                     bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "Meow meow meow")
                             bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
@@ -159,7 +168,8 @@ def setWebhook():
                         return "ok"
                     if "/pair" in text:
                         with open('data.txt') as json_file:
-                            data = json.load(json_file)
+                            # data = json.load(json_file)
+                            data = get_json()
                             if chat_id in data:
                                 if "pair" not in data[chat_id]:
                                     data[chat_id]["pair"] = []
@@ -173,13 +183,16 @@ def setWebhook():
                                 data[chat_id]["pair"].append({"user1":user1, "user2":user2})
                                 bot_send_message(chat_id, "Pair of {} and {} is recorded!".format(user1, user2))
                                 with open('data.txt', 'w') as outfile:
-                                    json.dump(data, outfile)
+                                    # json.dump(data, outfile)
+                                    s = json.dumps(data)
+                                    edit_json(s)
                         return "ok boomer"
                     if len(text) > 0:
                         is_private = ans['message']['chat']['type'] == 'private'
                         if is_private:
                             with open('data.txt') as json_file:
-                                data = json.load(json_file)
+                                # data = json.load(json_file)
+                                data = get_json()
                                 if chat_id in data and "santa_of" in data[chat_id]:
                                     for santa_of in data[chat_id]["santa_of"]:
                                         bot_send_message(chat_id, "You are the secret santa of {} ({}) in the group {}! Keep it secret!".format(santa_of["santa_of_name"], santa_of["santa_of_username"], santa_of["chat_title"]))
