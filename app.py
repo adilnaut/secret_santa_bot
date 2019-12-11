@@ -21,7 +21,7 @@ def edit_json(value):
 
 def get_json():
     r = requests.get("https://api.myjson.com/bins/jdjas")
-    return r.json()
+    return r.json()['data']
 @app.route("/", methods=["POST", "GET"])
 def setWebhook():
     if request.method == "GET":
