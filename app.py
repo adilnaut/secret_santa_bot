@@ -74,8 +74,8 @@ def setWebhook():
                 model_users[chat_id]["user_data"] = arr
                 bot_send_message(chat_id, "This is the secret santa bot! \n You can play Secret Santa now with /play command or set restriction with /pair @username1 @username2. \n Everyone should have admin right to be recognized by the bot")
                 with open('data.txt', 'w') as outfile:
-                    s = json.dumps(model_users)
-                    edit_json(s)
+                    # s = json.dumps(model_users)
+                    edit_json(model_users)
                 return "ok"
             else:
                 return "ok"
@@ -173,7 +173,7 @@ def setWebhook():
                                 data[usr_id]["santa_of"].append(temp_dict)
                                 with open('data.txt', 'w') as outfile:
                                     s = json.dumps(data)
-                                    edit_json(s)
+                                    edit_json(data)
                                 if players_copy[i] == "malika_nu":
                                     bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "Meow meow meow")
                             bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
@@ -198,7 +198,7 @@ def setWebhook():
                                 with open('data.txt', 'w') as outfile:
                                     # json.dump(data, outfile)
                                     s = json.dumps(data)
-                                    edit_json(s)
+                                    edit_json(data)
                         return "ok boomer"
                     if len(text) > 0:
                         is_private = ans['message']['chat']['type'] == 'private'
