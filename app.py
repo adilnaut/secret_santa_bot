@@ -95,7 +95,7 @@ def setWebhook():
                             while again:
                                 print('again')
                                 random.shuffle(players)
-                                break;
+                                # break;
                                 x = 0
                                 for j in range(len(players)):
                                     if players[j] == players_copy[j]:
@@ -115,10 +115,10 @@ def setWebhook():
                                             print(i_user1)
                                             print(o_user2)
                                             print(temp_data)
-                                            if players[i_user1] == pair["user2"]:
-                                                again = True
-                                                break;
-                                        continue
+                                            # if players[i_user1] == pair["user2"]:
+                                            #     again = True
+                                            #     break;
+                                        break;
                                     else:
                                         break;
                             for i in range(len(players)):
