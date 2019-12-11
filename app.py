@@ -17,12 +17,24 @@ bot = telegram.Bot(token='919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I')
 botName = "easy_santa_astana_bot" #Without @
 
 def edit_json(value):
-    r = requests.post("https://api.myjson.com/bins/1aneis", data={"data":value})
-    print(r.json())
+    url = "https://api.jsonbin.io/b/5df0a111bc5ffd0400977abc"
+    # url = 'https://api.jsonbin.io/b/<BIN_ID>'
+    headers = {'Content-Type': 'application/json'}
+    data = {"data": value}
+
+    req = requests.put(url, json=data, headers=headers)
+    print(req.text)
+    # r = requests.post("https://api.myjson.com/bins/1aneis", data={"data":value})
+    # print(r.json())
 def get_json():
-    r = requests.get("https://api.myjson.com/bins/1aneis")
-    print(r.json())
-    return r.json()['data']
+    url = "https://api.jsonbin.io/b/5df0a111bc5ffd0400977abc"
+    headers = {'secret-key': '$2b$10$R248o3.U5BEnIlPpNDFs.uERh/ui3h4oD/xLYz6Cbi2DTr.RrM52y'}
+
+    req = requests.put(url, json=nil, headers=headers)
+    print(req.text)
+    # r = requests.get("https://api.myjson.com/bins/1aneis")
+    # print(r.json())
+    return json.loads(req.text)['data']
 @app.route("/", methods=["POST", "GET"])
 def setWebhook():
     if request.method == "GET":
