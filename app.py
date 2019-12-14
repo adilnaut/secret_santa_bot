@@ -7,33 +7,30 @@ import requests
 import json
 import random
 
-HOST = "https://secret-santa-astana.herokuapp.com/"
+HOST = "Host-adress-here"
+Telegram_token = "telegram-token-here"
+jsonbin = "jsonbin-address-here"
+jsonbin_secret = "jsonbin-secret-code-here"
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-global bot
-bot = telegram.Bot(token='919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I')
-botName = "easy_santa_astana_bot" #Without @
 
+# update json database
 def edit_json(value):
-    url = "https://api.jsonbin.io/b/5df0a111bc5ffd0400977abc"
-    # url = 'https://api.jsonbin.io/b/<BIN_ID>'
-    headers = {'Content-Type': 'application/json', 'secret-key': '$2b$10$R248o3.U5BEnIlPpNDFs.uERh/ui3h4oD/xLYz6Cbi2DTr.RrM52y',}
+    url = jsonbin
+    headers = {'Content-Type': 'application/json', 'secret-key': jsonbin_secret,}
     data = {"data": value}
 
     req = requests.put(url, json=data, headers=headers)
     print(req.text)
-    # r = requests.post("https://api.myjson.com/bins/1aneis", data={"data":value})
-    # print(r.json())
+# get latest json database state
 def get_json():
-    url = "https://api.jsonbin.io/b/5df0a111bc5ffd0400977abc/latest"
-    headers = {'secret-key': '$2b$10$R248o3.U5BEnIlPpNDFs.uERh/ui3h4oD/xLYz6Cbi2DTr.RrM52y', 'Content-Type': 'application/json'}
+    url = jsonbin
+    headers = {'secret-key': jsonbin_secret, 'Content-Type': 'application/json'}
 
     req = requests.get(url, json={"another":"nothing"}, headers=headers)
     print(req.text)
-    # r = requests.get("https://api.myjson.com/bins/1aneis")
-    # print(r.json())
     return json.loads(req.text)['data']
 @app.route("/", methods=["POST", "GET"])
 def setWebhook():
@@ -41,9 +38,9 @@ def setWebhook():
         logging.info("Hello, Telegram!")
         print ("Done")
 
-        r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/setWebhook?url=https://secret-santa-astana.herokuapp.com/")
+        r = requests.get("https://api.telegram.org/bot"+Telegram_token+"/setWebhook?url="+HOST)
 
-        print(r.json())# https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
+        print(r.json())
         return "OK, Telegram Bot!"
     if request.method == "POST":
         print(request.get_json())
@@ -61,6 +58,7 @@ def setWebhook():
                 model_users = {}
 
                 arr = []
+                # collect data of every chat participant into our database
                 for user in users:
                     model_user = {}
                     model_user["name"] = user['user']['first_name']
@@ -73,9 +71,7 @@ def setWebhook():
                 model_users[chat_id] = {}
                 model_users[chat_id]["user_data"] = arr
                 bot_send_message(chat_id, "This is the secret santa bot! \n You can play Secret Santa now with /play command or set restriction with /pair @username1 @username2. \n Everyone should have admin right to be recognized by the bot")
-                with open('data.txt', 'w') as outfile:
-                    # s = json.dumps(model_users)
-                    edit_json(model_users)
+                edit_json(model_users)
                 return "ok"
             else:
                 return "ok"
@@ -90,98 +86,86 @@ def setWebhook():
                     if "/start" in text:
                         is_private = ans['message']['chat']['type'] == 'private'
                         if is_private:
-                            with open('data.txt') as json_file:
-                                # data = json.load(json_file)
-                                data = get_json()
-                                if chat_id in data and "santa_of" in data[chat_id]:
-                                    for santa_of in data[chat_id]["santa_of"]:
-                                        bot_send_message(chat_id, "You are the secret santa of {} ({}) in the group {}! Keep it secret!".format(santa_of["santa_of_name"], santa_of["santa_of_username"], santa_of["chat_title"]))
-                                    return "ok"
+                            data = get_json()
+                            if chat_id in data and "santa_of" in data[chat_id]:
+                                # There could be more than one group that user is in
+                                for santa_of in data[chat_id]["santa_of"]:
+                                    bot_send_message(chat_id, "You are the secret santa of {} ({}) in the group {}! Keep it secret!".format(santa_of["santa_of_name"], santa_of["santa_of_username"], santa_of["chat_title"]))
                                 return "ok"
+                            return "ok"
                         else:
                             bot_send_message(chat_id, "Bot already started!")
                         return "ok"
                     if "/play" in text:
-                        with open('data.txt') as json_file:
-                            # data = json.load(json_file)
-                            data = get_json()
-                            if chat_id not in data:
-                                return "ok"
-                            players = []
-                            temp_data = {}
-                            i = 0
-                            for user in data[chat_id]["user_data"]:
-                                name = user["name"]
-                                user_id = user["id"]
-                                username = user["username"]
-                                temp_data[username] = {}
-                                temp_data[username]["name"] = name
-                                temp_data[username]["user_id"] = user_id
-                                temp_data[username]["index"] = i
-                                players.append(username)
-                                i += 1
-                            again = True
-                            players_copy = list(players)
-                            c = 0
-                            while again:
-                                print('again')
-                                random.shuffle(players)
-                                # break;
-                                print("POOP")
-                                print(players)
-                                print(players_copy)
-                                print(data)
-                                print(temp_data)
-                                if c > 100:
-                                    bot_send_message(chat_id, "Restrictions are imposible to meet, try to delete bot and invite again!")
-                                    break;
-                                # break;
-                                c += 1
-                                x = 0
-                                for j in range(len(players)):
-                                    if players[j] == players_copy[j]:
+                        # assign secret santa to every user 
+                        data = get_json()
+                        if chat_id not in data:
+                            return "ok"
+                        players = []
+                        temp_data = {}
+                        i = 0
+                        for user in data[chat_id]["user_data"]:
+                            name = user["name"]
+                            user_id = user["id"]
+                            username = user["username"]
+                            temp_data[username] = {}
+                            temp_data[username]["name"] = name
+                            temp_data[username]["user_id"] = user_id
+                            temp_data[username]["index"] = i
+                            players.append(username)
+                            i += 1
+                        again = True
+                        players_copy = list(players)
+                        c = 0
+                        while again:
+                            random.shuffle(players)
+                            if c > 100:
+                                bot_send_message(chat_id, "Restrictions are imposible to meet, try to delete bot and invite again!")
+                                break;
+                            c += 1
+                            x = 0
+                            for j in range(len(players)):
+                                if players[j] == players_copy[j]:
                                         x += 1
 
-                                if x > 0:
-                                    continue
+                            if x > 0:
+                                continue
+                            else:
+                                if "pair" in data[chat_id]:
+                                    again = False
+                                    for pair in data[chat_id]["pair"]:
+                                        i_user1  = temp_data[pair["user1"]]["index"]
+                                        i_user2  = temp_data[pair["user2"]]["index"]
+                                        if players[i_user1] == pair["user2"]:
+                                            again = True
+                                            break;
+                                        if players[i_user2] == pair["user1"]:
+                                            again = True
+                                            break;
+                                    continue;
                                 else:
-                                    if "pair" in data[chat_id]:
-                                        again = False
-                                        for pair in data[chat_id]["pair"]:
-                                            i_user1  = temp_data[pair["user1"]]["index"]
-                                            i_user2  = temp_data[pair["user2"]]["index"]
-                                            if players[i_user1] == pair["user2"]:
-                                                again = True
-                                                break;
-                                            if players[i_user2] == pair["user1"]:
-                                                again = True
-                                                break;
-                                        continue;
-                                    else:
-                                        break;
-                            for i in range(len(players)):
-                                usr_id = str(temp_data[players_copy[i]]["user_id"])
-                                bot_send_message(usr_id, "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
-                                data[usr_id] = {}
-                                if "santa_of" not in data[usr_id]:
-                                    data[usr_id]["santa_of"] = []
-                                temp_dict = {}
-                                temp_dict["username"] = players_copy[i]
-                                temp_dict["santa_of_name"] =  temp_data[players[i]]["name"]
-                                temp_dict["santa_of_username"] = players[i]
-                                temp_dict["chat_title"] = ans['message']['chat']['title']
-                                data[usr_id]["santa_of"].append(temp_dict)
-                                with open('data.txt', 'w') as outfile:
-                                    s = json.dumps(data)
-                                    edit_json(data)
-                                if players_copy[i] == "malika_nu":
-                                    bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "Meow meow meow")
-                            bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
-                            return "ok"
+                                    break;
+                        for i in range(len(players)):
+                            usr_id = str(temp_data[players_copy[i]]["user_id"])
+                            bot_send_message(usr_id, "You are secret santa of {} ({})! Keep it secret!".format(temp_data[players[i]]["name"] , players[i]))
+                            data[usr_id] = {}
+                            if "santa_of" not in data[usr_id]:
+                                data[usr_id]["santa_of"] = []
+                            temp_dict = {}
+                            temp_dict["username"] = players_copy[i]
+                            temp_dict["santa_of_name"] =  temp_data[players[i]]["name"]
+                            temp_dict["santa_of_username"] = players[i]
+                            temp_dict["chat_title"] = ans['message']['chat']['title']
+                            data[usr_id]["santa_of"].append(temp_dict)
+                            with open('data.txt', 'w') as outfile:
+                                s = json.dumps(data)
+                                edit_json(data)
+                            if players_copy[i] == "malika_nu":
+                                bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "Meow meow meow")
+                        bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
                         return "ok"
                     if "/pair" in text:
                         with open('data.txt') as json_file:
-                            # data = json.load(json_file)
                             data = get_json()
                             if chat_id in data:
                                 if "pair" not in data[chat_id]:
@@ -196,7 +180,6 @@ def setWebhook():
                                 data[chat_id]["pair"].append({"user1":user1, "user2":user2})
                                 bot_send_message(chat_id, "Pair of {} and {} is recorded!".format(user1, user2))
                                 with open('data.txt', 'w') as outfile:
-                                    # json.dump(data, outfile)
                                     s = json.dumps(data)
                                     edit_json(data)
                         return "ok boomer"
@@ -204,7 +187,6 @@ def setWebhook():
                         is_private = ans['message']['chat']['type'] == 'private'
                         if is_private:
                             with open('data.txt') as json_file:
-                                # data = json.load(json_file)
                                 data = get_json()
                                 if chat_id in data and "santa_of" in data[chat_id]:
                                     for santa_of in data[chat_id]["santa_of"]:
@@ -216,37 +198,23 @@ def setWebhook():
         sender_id = str(ans['message']['from']['id'])
         sender_name = str(ans['message']['from']['first_name'])
         bot_send_message(sender_id, sender_name)
-        # print("sendMessage?chat_id="+str(ans['message']['from']['id'])+",text="+str(ans['message']['from']['first_name']))
         return "ok"
 
 @app.route("/verify", methods=["POST"])
 def verification():
     if request.method == "POST":
         print(request.get_json())
-        # update = telegram.Update.de_json(request.get_json(force=True),bot)
-        # if update is None:
-        #     return "Show me your TOKEN please!"
-        # logging.info("Calling {}".format(update.message))
-        # handle_message(update.message)
         return "ok"
 def bot_send_message(sender_id, text):
     bot_request("sendMessage?chat_id="+sender_id+"&text="+text)
 
 def bot_request(req):
-    r = requests.get("https://api.telegram.org/bot919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I/"+req,  headers={'Content-Type':'application/json'})
+    r = requests.get("https://api.telegram.org/bot"+Telegram_token+"/"+req,  headers={'Content-Type':'application/json'})
     print(r.json())
     return r.json()
-# def handle_message(msg):
-#     text = msg.text
-#     print(msg)
-#     # An echo bot
-#     bot.sendMessage(chat_id=msg.chat.id, text=text)
+
 
 
 if __name__ == "__main__":
-    # s = bot.setWebhook("{}/verify".format(HOST))
-    # if s:
-    #     logging.info("{} WebHook Setup OK!".format(botName))
-    # else:
-    #     logging.info("{} WebHook Setup Failed!".format(botName))
+
     app.run(host= "0.0.0.0", debug=True)
