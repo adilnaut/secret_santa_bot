@@ -97,7 +97,7 @@ def setWebhook():
                             bot_send_message(chat_id, "Bot already started!")
                         return "ok"
                     if "/play" in text:
-                        # assign secret santa to every user 
+                        # assign secret santa to every user
                         data = get_json()
                         if chat_id not in data:
                             return "ok"
@@ -157,11 +157,8 @@ def setWebhook():
                             temp_dict["santa_of_username"] = players[i]
                             temp_dict["chat_title"] = ans['message']['chat']['title']
                             data[usr_id]["santa_of"].append(temp_dict)
-                            with open('data.txt', 'w') as outfile:
-                                s = json.dumps(data)
-                                edit_json(data)
-                            if players_copy[i] == "malika_nu":
-                                bot_send_message(str(temp_data[players_copy[i]]["user_id"]), "Meow meow meow")
+                            s = json.dumps(data)
+                            edit_json(data)
                         bot_send_message(chat_id, "Everybody in this group now have a Secret Santa!")
                         return "ok"
                     if "/pair" in text:
@@ -179,9 +176,8 @@ def setWebhook():
                                 user2 = tokens[2].replace("@", "")
                                 data[chat_id]["pair"].append({"user1":user1, "user2":user2})
                                 bot_send_message(chat_id, "Pair of {} and {} is recorded!".format(user1, user2))
-                                with open('data.txt', 'w') as outfile:
-                                    s = json.dumps(data)
-                                    edit_json(data)
+                                s = json.dumps(data)
+                                edit_json(data)
                         return "ok boomer"
                     if len(text) > 0:
                         is_private = ans['message']['chat']['type'] == 'private'
