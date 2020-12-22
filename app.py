@@ -7,10 +7,10 @@ import requests
 import json
 import random
 
-HOST = "Host-adress-here"
-Telegram_token = "telegram-token-here"
-jsonbin = "jsonbin-address-here"
-jsonbin_secret = "jsonbin-secret-code-here"
+HOST = "https://secret-santa-astana.herokuapp.com/"
+Telegram_token = "919844054:AAFYfWSrbUgFgKs1gZMCyHKJWDyOJjYDu7I"
+jsonbin = "https://jsonbin.io/5fe24d0c47ed0861b36aa379"
+jsonbin_secret = "$2b$10$R248o3.U5BEnIlPpNDFs.uERh/ui3h4oD/xLYz6Cbi2DTr.RrM52y"
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
